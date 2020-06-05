@@ -1,0 +1,20 @@
+{
+  "name": "rosbergvik/smp",
+  "description": "simple mvc project",
+  "type": "library",
+  "authors": [
+    {
+      "name": "RosbergVik"
+    }
+  ],
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "Smp\\": "smp/",
+      "App\\": "app/"
+    }
+  },
+  "require": {
+    "php": ">=7.3"
+  }
+}
