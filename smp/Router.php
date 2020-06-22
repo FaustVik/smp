@@ -41,11 +41,11 @@ class Router
     /**
      * @throws \ErrorException
      */
-    public function run()
+    public function run(): void
     {
         $this->uri = $_SERVER['REQUEST_URI'];
 
-        $this->namespace = Application::$app['namespace'];
+        $this->namespace = Application::$app->namespace;
 
         if (!$this->namespace) {
             throw new \ErrorException('Not found Namespace');
@@ -54,7 +54,7 @@ class Router
         $this->parse();
     }
 
-    protected function parse()
+    protected function parse(): void
     {
         if ($this->uri === '/') {
             $this->WorkWithParams();
@@ -67,7 +67,7 @@ class Router
             if (!$this->routes($this->uri)) {
                 $explode = explode('/', $this->uri);
 
-                if (count($explode) == 2) {
+                if (count($explode) === 2) {
                     /** without action */
                     $this->controller = $this->setNamespaces($explode[1]);
                     $this->action     = $this->setAction($this->defaultAction);
@@ -84,7 +84,7 @@ class Router
     /**
      * Checks if parameters. If there is, it writes to $ this->params.And $ this->uri writes url without parameters
      */
-    protected function WorkWithParams()
+    protected function WorkWithParams(): void
     {
         $explode = explode('?', $this->uri);
 
@@ -99,7 +99,7 @@ class Router
      *
      * @param string $params
      */
-    protected function setParams(string $params)
+    protected function setParams(string $params): void
     {
         $params = explode('&', $params);
 
@@ -120,7 +120,7 @@ class Router
      *
      * @return string
      */
-    protected function setNamespaces($controller_name)
+    protected function setNamespaces($controller_name): string
     {
         return $this->namespace . '\\' . ucfirst($controller_name) . 'Controller';
     }
@@ -130,12 +130,12 @@ class Router
      *
      * @return string
      */
-    protected function setAction($action_name)
+    protected function setAction($action_name): string
     {
         return 'action' . ucfirst($action_name);
     }
 
-    protected function runAction()
+    protected function runAction(): void
     {
         /** set default Controller if not found necessary Controller */
         if (!class_exists($this->controller)) {
@@ -175,22 +175,20 @@ class Router
      *
      * @return bool
      */
-    protected function routes($pattern)
+    protected function routes($pattern): bool
     {
         $pattern = substr($pattern, 1);
 
-        if (isset(Application::$app['namespace'])){
-            $rules = Application::$app['url_manager'];
+        $rules = Application::$app->url_manager;
 
-            foreach ($rules as $rule => $real_controller_action) {
-                if ($rule === $pattern) {
-                    list($controller, $action) = explode('/', $real_controller_action);
+        foreach ($rules as $rule => $real_controller_action) {
+            if ($rule === $pattern) {
+                [$controller, $action] = explode('/', $real_controller_action);
 
-                    $this->controller = $this->setNamespaces($controller);
-                    $this->action     = $this->setAction($action);
+                $this->controller = $this->setNamespaces($controller);
+                $this->action     = $this->setAction($action);
 
-                    return true;
-                }
+                return true;
             }
         }
         return false;
