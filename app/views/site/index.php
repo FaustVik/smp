@@ -14,6 +14,7 @@ use Smp\View;
     <title><?= $title ?></title>
 </head>
 <body>
+<?= $gg ?>
 <?php View::getFooter(); ?>
 </body>
 </html>

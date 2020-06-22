@@ -8,6 +8,7 @@ namespace Smp;
  * @property array  $db
  * @property string $view_path
  * @property array  $url_manager
+ * @property string $layout_path
  * @package Smp
  */
 class Application

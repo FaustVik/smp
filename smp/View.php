@@ -15,9 +15,7 @@ class View
      */
     public static function getHead()
     {
-        $view_path = App::i()->getParams()['view_path'];
-
-        return require $view_path . '/layouts/head.php';
+        return require Application::$app->layout_path . 'head.php';
     }
 
     /**
@@ -25,8 +23,6 @@ class View
      */
     public static function getFooter()
     {
-        $view_path = App::i()->getParams()['view_path'];
-
-        return require $view_path . '/layouts/footer.php';
+        return require Application::$app->layout_path . 'footer.php';
     }
 }
