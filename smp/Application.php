@@ -4,51 +4,64 @@ namespace Smp;
 
 /**
  * Class Application
+ * @property string $namespace
+ * @property array  $db
+ * @property string $view_path
+ * @property array  $url_manager
+ * @property string $layout_path
  * @package Smp
  */
-class Application extends Configure
+class Application extends Components
 {
     /** @var array $app -  storage app config */
     public static $app;
 
-    protected static $instance;
+    protected const IMPORTANT_CONF = [
+        'view_path',
+        'namespace',
+    ];
 
-    public static function i()
+    public function __construct(array $config)
     {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
+        self::$app = $this;
 
-        return self::$instance;
-    }
-
-    public function run(array $config)
-    {
-        $this->getConfig($config);
-
-        $router = new Router();
-        $router->run();
+        $this->checkConfig($config);
+        $this->setApp(self::$app, $config);
     }
 
     /**
      * @param array $config
      *
-     * @throws \Exception
+     * @throws AppError
      */
-    protected function getConfig(array $config)
+    protected function checkConfig(array $config): void
     {
-        if (empty($config)) {
-            throw new \Error('Not configuration');
+        $keys = array_keys($config);
+
+        foreach (self::IMPORTANT_CONF as $conf_key) {
+            if (!in_array($conf_key, $keys, true)) {
+                throw new AppError('Not found param ' . $conf_key);
+            }
         }
-
-        $this->config = $config;
-        $this->checkConfig();
-
-        self::$app = $this->config;
     }
 
-    public function close()
+    /**
+     * @throws \ErrorException
+     */
+    public function run(): void
     {
-        exit(0);
+        $router = new Router();
+        $router->run();
+    }
+
+    /**
+     * @param object $object
+     * @param array  $config
+     */
+    protected function setApp(object $object, array $config): void
+    {
+        foreach ($config as $name => $value) {
+            $object->$name = $value;
+        }
     }
 }

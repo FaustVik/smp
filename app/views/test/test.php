@@ -1,10 +1,9 @@
 <?php
 /**
  * @var string $title
- * @var string $gg
-*/
+ * @var int $param
+ */
 
-use Smp\Helpers\Url;
 use Smp\View;
 ?>
 
@@ -15,8 +14,7 @@ use Smp\View;
     <title><?= $title ?></title>
 </head>
 <body>
-<?= $gg ?>
-<a href="<?= Url::toRoute('lool', ['f' => 12314]) ?>">Libkk</a>
+<?= $param ?>
 <?php View::getFooter(); ?>
 </body>
 </html>

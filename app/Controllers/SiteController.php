@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use Smp\Application;
 use Smp\Controller;
 
 /**
@@ -17,6 +18,8 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $this->title = 'Hel';
+
+        var_dump(Application::$app->getRequest()->get());
 
         return $this->render('index',['gg' => 12993]);
     }
