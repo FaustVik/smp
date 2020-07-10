@@ -11,7 +11,7 @@ namespace Smp;
  * @property string $layout_path
  * @package Smp
  */
-class Application
+class Application extends Components
 {
     /** @var array $app -  storage app config */
     public static $app;

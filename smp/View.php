@@ -2,8 +2,6 @@
 
 namespace Smp;
 
-use App\App;
-
 /**
  * Class View
  * @package Smp
