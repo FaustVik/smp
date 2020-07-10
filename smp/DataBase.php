@@ -17,16 +17,16 @@ class DataBase
      * @return PDO
      * @throws \Exception
      */
-    protected function getDb()
+    protected function getDb(): ?PDO
     {
-        $db_config = Application::$app['db'];
+        $db_config = Application::$app->db;
 
         try {
             $pdo = new PDO('mysql:host=' . $db_config['host'] . ';dbname=' . $db_config['dbname'], $db_config['user'], $db_config['password']);
             $pdo->exec("SET NAMES utf8");
             return $pdo;
         } catch (\PDOException $exception) {
-            throw new \Exception('error connected Db ' . $exception);
+            throw new \RuntimeException('error connected Db ' . $exception);
         }
     }
 
@@ -65,7 +65,7 @@ class DataBase
      */
     public function fetchObj(string $sql, $prepare_data = [])
     {
-        $db   = self::getDb();
+        $db   = $this->getDb();
         $stmt = $db->prepare($sql);
         if ($prepare_data) {
             $stmt->execute($prepare_data);
@@ -85,7 +85,7 @@ class DataBase
      */
     public function execute(string $sql, $prepare_data = [])
     {
-        $pdo  = self::getDb();
+        $pdo  = $this->getDb();
         $stmt = $pdo->prepare($sql);
 
         return $stmt->execute($prepare_data);
@@ -102,7 +102,7 @@ class DataBase
      */
     protected function fetch(string $sql, $style, $type, $prepare_data = [])
     {
-        $pdo  = self::getDb();
+        $pdo  = $this->getDb();
         $stmt = $pdo->prepare($sql);
 
         if (empty($prepare_data)) {
@@ -111,7 +111,7 @@ class DataBase
             $stmt->execute($prepare_data);
         }
 
-        if ($type == self::FETCH_ONE) {
+        if ($type === self::FETCH_ONE) {
             return $stmt->fetch($style);
         }
 

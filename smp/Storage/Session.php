@@ -8,12 +8,12 @@ namespace Smp\Storage;
  */
 class Session implements StorageInterface
 {
-    public function start()
+    public function start(): void
     {
         session_start();
     }
 
-    public function destroy()
+    public function destroy(): void
     {
         session_destroy();
     }

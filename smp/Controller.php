@@ -2,8 +2,6 @@
 
 namespace Smp;
 
-use App\App;
-
 /**
  * Class Controller
  * @package Smp
@@ -24,10 +22,10 @@ class Controller
             }
         }
 
-        $class_c    = App::i()->getCalledClass(2);
+        $class_c    = $this->getCalledClass(2);
         $class_name = mb_strtolower($this->getNameClass($class_c));
 
-        $view_path = App::i()->getParams()['view_path'] . '/' . $class_name . '/' . $file_name . '.php';
+        $view_path =  Application::$app->view_path . '/' . $class_name . '/' . $file_name . '.php';
 
         if (!file_exists($view_path)) {
             throw new \Exception('Not found view file path: ' . $view_path);
@@ -41,7 +39,7 @@ class Controller
      *
      * @return string
      */
-    private function getNameClass($class_called)
+    private function getNameClass($class_called): string
     {
         $ex         = explode('\\', $class_called['class']);
         $class_name = explode('Controller', $ex[2]);
@@ -52,16 +50,40 @@ class Controller
     /**
      * @return Response
      */
-    protected function getResponse()
+    protected function getResponse(): Response
     {
-        return App::i()->getResponse();
+        return Application::$app->getResponse();
     }
 
     /**
      * @return Request
      */
-    protected function getRequest()
+    protected function getRequest(): Request
     {
-        return App::i()->getRequest();
+        return Application::$app->getRequest();
+    }
+
+    /**
+     * @param int $offset
+     *
+     * @return array
+     */
+    private function getCalledClass($offset = 1): array
+    {
+        $backtrace = debug_backtrace();
+
+        $caller = null;
+
+        if (isset($backtrace[$offset])) {
+            $backtrace = $backtrace[$offset];
+            if (isset($backtrace['class'])) {
+                $caller['class'] = $backtrace['class'];
+            }
+            if (isset($backtrace['function'])) {
+                $caller['function'] = $backtrace['function'];
+            }
+        }
+
+        return $caller;
     }
 }

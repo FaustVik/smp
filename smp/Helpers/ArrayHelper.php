@@ -13,7 +13,7 @@ class ArrayHelper
      * @param     $column
      * @param int $sort_type
      */
-    public static function sortByColumn(&$array, $column, $sort_type = SORT_ASC)
+    public static function sortByColumn(&$array, $column, $sort_type = SORT_ASC): void
     {
         $sort_column = [];
 
