@@ -28,7 +28,7 @@ class Request
     /**
      * @return bool
      */
-    public function isPost()
+    public function isPost(): bool
     {
         return isset($_POST);
     }
@@ -36,7 +36,7 @@ class Request
     /**
      * @return bool
      */
-    public function isAjax()
+    public function isAjax(): bool
     {
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
     }

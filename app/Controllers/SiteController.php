@@ -23,4 +23,9 @@ class SiteController extends Controller
 
         return $this->render('index',['gg' => 12993]);
     }
+
+    public function actionTest()
+    {
+      echo 12;
+    }
 }
