@@ -22,7 +22,7 @@ server {
     listen 80;
 
     server_name mvc.api;
-    root        /home/viktor/projects/simple-mvc/web;
+    root        /home/viktor/projects/smp/web;
     index       index.php;
 
     access_log  /var/log/nginx/access.log;
@@ -48,7 +48,7 @@ server {
     location ~ \.php$ {
             include fastcgi_params;
             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+            fastcgi_pass unix:/run/php/php7.3-fpm.sock;
 
             try_files $uri =404;
         }

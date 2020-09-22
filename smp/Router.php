@@ -5,7 +5,7 @@ namespace Smp;
 /**
  * Class Router
  * @author  Victor
- * @version 2.2
+ * @version 3.0
  * @since   10.09.2019
  * @package Smp
  */
@@ -44,37 +44,26 @@ class Router
     public function run(): void
     {
         $this->uri = $_SERVER['REQUEST_URI'];
-
-        $this->namespace = Application::$app->namespace;
-
-        if (!$this->namespace) {
-            throw new \ErrorException('Not found Namespace');
-        }
-
+        $this->setNamespaces();
         $this->parse();
     }
 
     protected function parse(): void
     {
+        $this->checkParams();
+
         if ($this->uri === '/') {
-            $this->WorkWithParams();
-
-            $this->controller = $this->setNamespaces($this->defaultController);
+            $this->controller = $this->setController($this->defaultController);
             $this->action     = $this->setAction($this->defaultAction);
-        } else {
-            $this->WorkWithParams();
-
-            if (!$this->routes($this->uri)) {
-                $explode = explode('/', $this->uri);
-
-                if (count($explode) === 2) {
-                    /** without action */
-                    $this->controller = $this->setNamespaces($explode[1]);
-                    $this->action     = $this->setAction($this->defaultAction);
-                } else {
-                    $this->controller = $this->setNamespaces($explode[1]);
-                    $this->action     = $this->setAction($explode[2]);
-                }
+        } else if (!$this->routes($this->uri)) {
+            $explode = explode('/', $this->uri);
+            if (count($explode) === 2) {
+                /** without action */
+                $this->controller = $this->setController($explode[1]);
+                $this->action     = $this->setAction($this->defaultAction);
+            } else {
+                $this->controller = $this->setController($explode[1]);
+                $this->action     = $this->setAction($explode[2]);
             }
         }
 
@@ -84,7 +73,7 @@ class Router
     /**
      * Checks if parameters. If there is, it writes to $ this->params.And $ this->uri writes url without parameters
      */
-    protected function WorkWithParams(): void
+    protected function checkParams(): void
     {
         $explode = explode('?', $this->uri);
 
@@ -97,13 +86,17 @@ class Router
     /**
      * Set params
      *
-     * @param string $params
+     * @param string $params_string
      */
-    protected function setParams(string $params): void
+    protected function setParams(string $params_string): void
     {
-        $params = explode('&', $params);
+        $params_arr = explode('&', $params_string);
 
-        foreach ($params as $data) {
+        if (!is_array($params_arr)) {
+            return;
+        }
+
+        foreach ($params_arr as $data) {
             $ex = explode('=', $data);
 
             if (isset($ex[1])) {
@@ -120,18 +113,30 @@ class Router
      *
      * @return string
      */
-    protected function setNamespaces($controller_name): string
+    protected function setController($controller_name): string
     {
         return $this->namespace . '\\' . ucfirst($controller_name) . 'Controller';
     }
 
     /**
-     * @param $action_name
+     * @param string $action_name
      *
      * @return string
      */
-    protected function setAction($action_name): string
+    protected function setAction(string $action_name): string
     {
+        $ex = explode('-', $action_name);
+
+        if (count($ex) > 1) {
+            $action = 'action';
+
+            foreach ($ex as $item) {
+                $action .= ucfirst($item);
+            }
+
+            return $action;
+        }
+
         return 'action' . ucfirst($action_name);
     }
 
@@ -139,7 +144,7 @@ class Router
     {
         /** set default Controller if not found necessary Controller */
         if (!class_exists($this->controller)) {
-            $this->controller = $this->setNamespaces($this->defaultController);
+            $this->controller = $this->setController($this->defaultController);
         }
 
         $this->controller = new $this->controller;
@@ -155,6 +160,10 @@ class Router
         /** set default action if not found necessary action */
         if (!method_exists($this->controller, $this->action)) {
             $action = $this->setAction($this->defaultAction);
+        }
+
+        if (!method_exists($this->controller, $action)) {
+            Application::$app->getResponse()->set404();
         }
 
         if (!empty($this->params)) {
@@ -181,16 +190,33 @@ class Router
 
         $rules = Application::$app->url_manager;
 
+        if (!$rules) {
+            return false;
+        }
+
         foreach ($rules as $rule => $real_controller_action) {
             if ($rule === $pattern) {
                 [$controller, $action] = explode('/', $real_controller_action);
 
-                $this->controller = $this->setNamespaces($controller);
+                $this->controller = $this->setController($controller);
                 $this->action     = $this->setAction($action);
 
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * @throws \ErrorException
+     */
+    protected function setNamespaces(): void
+    {
+        $this->namespace = Application::$app->namespace;
+
+        if (!$this->namespace) {
+            throw new \ErrorException('Not found Namespace');
+        }
+
     }
 }

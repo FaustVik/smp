@@ -2,8 +2,6 @@
 
 namespace Smp;
 
-use HttpException;
-
 /**
  * Class Response
  * @package Smp
@@ -27,20 +25,38 @@ class Response
     /**
      * @param string $message
      *
-     * @throws HttpException
      */
     public function set404($message = '')
     {
-        throw new HttpException(404, $message);
+        header('HTTP/1.0 404 Not Found', true, 404);
+
+        $path = Application::$app->layout_path . '/error/404.html';
+
+        if (!is_file($path)) {
+            $path = Application::$app->getPathToSrc() . 'layout/error/404.html';
+        }
+
+        $contents = file_get_contents($path, TRUE);
+
+        exit($contents);
     }
 
     /**
      * @param string $message
      *
-     * @throws HttpException
      */
     public function set403($message = '')
     {
-        throw new HttpException(403, $message);
+        header('HTTP/1.0 403 Forbidden', true, 403);
+
+        $path = Application::$app->layout_path . '/error/403.html';
+
+        if (!is_file($path)) {
+            $path = Application::$app->getPathToSrc() . 'layout/error/404.html';
+        }
+
+        $contents = file_get_contents($path, TRUE);
+
+        exit($contents);
     }
 }
