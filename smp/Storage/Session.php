@@ -8,14 +8,24 @@ namespace Smp\Storage;
  */
 class Session implements StorageInterface
 {
-    public function start(): void
+    /**
+     * @return bool
+     */
+    public function start(): bool
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            return session_start();
+        }
+
+        return true;
     }
 
-    public function destroy(): void
+    /**
+     * @return bool
+     */
+    public function destroy(): bool
     {
-        session_destroy();
+        return session_destroy();
     }
 
     /**
