@@ -32,6 +32,10 @@ class Response
 
         $path = Application::$app->layout_path . '/error/404.html';
 
+        if (!is_file($path)) {
+            $path = Application::$app->getPathToSrc() . 'layout/error/404.html';
+        }
+
         $contents = file_get_contents($path, TRUE);
 
         exit($contents);
@@ -46,6 +50,10 @@ class Response
         header('HTTP/1.0 403 Forbidden', true, 403);
 
         $path = Application::$app->layout_path . '/error/403.html';
+
+        if (!is_file($path)) {
+            $path = Application::$app->getPathToSrc() . 'layout/error/404.html';
+        }
 
         $contents = file_get_contents($path, TRUE);
 

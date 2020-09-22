@@ -21,6 +21,8 @@ class SiteController extends Controller
 
         var_dump(Application::$app->getRequest()->get());
 
+        var_dump($this->session->get('ff'));
+
         return $this->render('index',['gg' => 12993]);
     }
 

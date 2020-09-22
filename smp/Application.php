@@ -25,12 +25,16 @@ class Application extends Components
         'namespace',
     ];
 
+    /**@var string $basePathSrc */
+    protected $basePathSrc;
+
     public function __construct(array $config)
     {
         self::$app = $this;
 
         $this->checkConfig($config);
         $this->setApp(self::$app, $config);
+        $this->setPathToSrc();
 
         $this->params = $config;
     }
@@ -85,5 +89,18 @@ class Application extends Components
     public function setParams(array $params): void
     {
         $this->params = $params;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPathToSrc(): string
+    {
+        return $this->basePathSrc;
+    }
+
+    protected function setPathToSrc(): void
+    {
+        $this->basePathSrc = __DIR__ . '/src/';
     }
 }
