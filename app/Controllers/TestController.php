@@ -17,11 +17,16 @@ class TestController extends BaseController
     public function actionTestRoute()
     {
         $param = $this->getRequest()->getInt('f');
-
+var_dump(33);
         $this->title = 'test';
 
         return $this->render('test', [
             'param' => $param,
         ]);
+    }
+
+    public function actionWowThisMagic()
+    {
+        var_dump('llll');
     }
 }
