@@ -14,6 +14,9 @@ class Router
     protected const DEFAULT_CONTROLLER = 'site';
     protected const DEFAULT_ACTION     = 'index';
 
+    protected const BEFORE_ACTION = 'beforeAction';
+    protected const AFTER_ACTION  = 'afterAction';
+
     /**@var string $uri */
     protected $uri;
 
@@ -147,6 +150,12 @@ class Router
 
         $action = $this->action;
 
+        /** call method beforeAction */
+        if (method_exists($this->controller, self::BEFORE_ACTION)) {
+            $b_action = self::BEFORE_ACTION;
+            $this->controller->$b_action();
+        }
+
         /** set default action if not found necessary action */
         if (!method_exists($this->controller, $this->action)) {
             $action = $this->setAction(self::DEFAULT_ACTION);
@@ -154,6 +163,12 @@ class Router
 
         if (!method_exists($this->controller, $action)) {
             Application::$app->getResponse()->set404();
+        }
+
+        /** call method afterAction */
+        if (method_exists($this->controller, self::AFTER_ACTION)) {
+            $a_action = self::AFTER_ACTION;
+            $this->controller->$a_action();
         }
 
         if (!empty($this->params)) {
