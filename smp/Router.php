@@ -5,23 +5,14 @@ namespace Smp;
 /**
  * Class Router
  * @author  Victor
- * @version 3.0
+ * @version 3.1
  * @since   10.09.2019
  * @package Smp
  */
 class Router
 {
-    /**@var string $defaultController */
-    protected $defaultController = 'site';
-
-    /**@var string $defaultAction */
-    protected $defaultAction = 'index';
-
-    /**@var string $beforeAction */
-    protected $beforeAction = 'beforeAction';
-
-    /**@var string $afterAction */
-    protected $afterAction = 'afterAction';
+    protected const DEFAULT_CONTROLLER = 'site';
+    protected const DEFAULT_ACTION     = 'index';
 
     /**@var string $uri */
     protected $uri;
@@ -43,9 +34,14 @@ class Router
      */
     public function run(): void
     {
-        $this->uri = $_SERVER['REQUEST_URI'];
+        $this->getUri();
         $this->setNamespaces();
         $this->parse();
+    }
+
+    protected function getUri(): void
+    {
+        $this->uri = $_SERVER['REQUEST_URI'];
     }
 
     protected function parse(): void
@@ -53,14 +49,14 @@ class Router
         $this->checkParams();
 
         if ($this->uri === '/') {
-            $this->controller = $this->setController($this->defaultController);
-            $this->action     = $this->setAction($this->defaultAction);
+            $this->controller = $this->setController(self::DEFAULT_CONTROLLER);
+            $this->action     = $this->setAction(self::DEFAULT_ACTION);
         } else if (!$this->routes($this->uri)) {
             $explode = explode('/', $this->uri);
             if (count($explode) === 2) {
                 /** without action */
                 $this->controller = $this->setController($explode[1]);
-                $this->action     = $this->setAction($this->defaultAction);
+                $this->action     = $this->setAction(self::DEFAULT_ACTION);
             } else {
                 $this->controller = $this->setController($explode[1]);
                 $this->action     = $this->setAction($explode[2]);
@@ -144,22 +140,16 @@ class Router
     {
         /** set default Controller if not found necessary Controller */
         if (!class_exists($this->controller)) {
-            $this->controller = $this->setController($this->defaultController);
+            $this->controller = $this->setController(self::DEFAULT_CONTROLLER);
         }
 
         $this->controller = new $this->controller;
-
-        /** call method beforeAction  */
-        if (method_exists($this->controller, $this->beforeAction)) {
-            $b_action = $this->beforeAction;
-            $this->controller->$b_action();
-        }
 
         $action = $this->action;
 
         /** set default action if not found necessary action */
         if (!method_exists($this->controller, $this->action)) {
-            $action = $this->setAction($this->defaultAction);
+            $action = $this->setAction(self::DEFAULT_ACTION);
         }
 
         if (!method_exists($this->controller, $action)) {
@@ -170,12 +160,6 @@ class Router
             $this->controller->$action($this->params);
         } else {
             $this->controller->$action();
-        }
-
-        /** call method afterAction */
-        if (method_exists($this->controller, $this->afterAction)) {
-            $a_action = $this->afterAction;
-            $this->controller->$a_action();
         }
     }
 
@@ -217,6 +201,5 @@ class Router
         if (!$this->namespace) {
             throw new \ErrorException('Not found Namespace');
         }
-
     }
 }

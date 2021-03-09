@@ -1,6 +1,8 @@
 {
   "name": "rosbergvik/smp",
   "description": "simple mvc project",
+  "version":"1.0.0",
+  "license": "BSD-3-Clause",
   "type": "library",
   "authors": [
     {
