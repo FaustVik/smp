@@ -12,7 +12,7 @@ namespace Smp;
  * @property array  $params
  * @package Smp
  */
-class Application extends Components
+class Application
 {
     /** @var array $app -  storage app config */
     public static $app;
@@ -102,5 +102,29 @@ class Application extends Components
     protected function setPathToSrc(): void
     {
         $this->basePathSrc = __DIR__ . '/src/';
+    }
+
+    /**
+     * @return Response
+     */
+    public function getResponse(): Response
+    {
+        return Response::i();
+    }
+
+    /**
+     * @return Request
+     */
+    public function getRequest(): Request
+    {
+        return Request::i();
+    }
+
+    /**
+     * @return DataBase
+     */
+    public function getDb(): DataBase
+    {
+        return new DataBase();
     }
 }
