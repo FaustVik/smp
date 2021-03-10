@@ -23,4 +23,28 @@ class ArrayHelper
 
         array_multisort($sort_column, $sort_type, $array);
     }
+
+    /**
+     * @param string $mask
+     * @param array  $array
+     * @param bool   $remove_from_source
+     *
+     * @return array
+     */
+    public static function getValueByMask(string $mask, array &$array, bool $remove_from_source = true): array
+    {
+        $find_elements = [];
+
+        foreach ($array as $key => $value) {
+            if (strpos($key, $mask) !== false) {
+                $find_elements[$key] = $value;
+
+                if ($remove_from_source) {
+                    unset($array[$key]);
+                }
+            }
+        }
+
+        return $find_elements;
+    }
 }

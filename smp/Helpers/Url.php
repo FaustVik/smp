@@ -69,20 +69,20 @@ class Url
      */
     public static function buildSchemeWithHost(): string
     {
-        if (SMP_DEBUG){
-            return  self::SCHEME_HTTP . $_SERVER['SERVER_NAME'] . '/';
+        if (SMP_DEBUG) {
+            return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/';
         }
 
-        return self::SCHEME_HTTPS . $_SERVER['SERVER_NAME'] . '/';
+        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/';
     }
 
     /**
-     * @param       $route
-     * @param array $params
+     * @param string $route
+     * @param array  $params
      *
      * @return int|string
      */
-    public static function toRoute($route, array $params = [])
+    public static function toRoute(string $route, array $params = [])
     {
         $rules = Application::$app->url_manager;
 
@@ -103,7 +103,7 @@ class Url
         if (!empty($params)) {
             foreach ($params as $key => $value) {
                 if ($first_parameter) {
-                    $url .= '?' . $key . '=' . $value;
+                    $url             .= '?' . $key . '=' . $value;
                     $first_parameter = false;
                 } else {
                     $url .= '&' . $key . '=' . $value;
