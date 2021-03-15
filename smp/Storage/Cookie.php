@@ -43,7 +43,7 @@ class Cookie implements StorageInterface
     /**
      * @inheritDoc
      */
-    public function count()
+    public function count(): int
     {
         return count($_COOKIE);
     }
@@ -51,7 +51,7 @@ class Cookie implements StorageInterface
     /**
      * @inheritDoc
      */
-    public function getAll()
+    public function getAll(): array
     {
         return $_COOKIE;
     }
@@ -61,7 +61,7 @@ class Cookie implements StorageInterface
      * keys params : name, value, expire, path, secure, domain, httOnly
      * @example  [key => value]
      */
-    public function set(array $params)
+    public function set(array $params): bool
     {
         $name    = $params['name'];
         $value   = $params['value'];
@@ -71,6 +71,6 @@ class Cookie implements StorageInterface
         $domain  = $params['domain'] ?? $_SERVER['SERVER_NAME'];
         $httOnly = $params['httOnly'] ?? true;
 
-        setcookie($name, $value, $expire, $path, $domain, $secure, $httOnly);
+       return setcookie($name, $value, $expire, $path, $domain, $secure, $httOnly);
     }
 }

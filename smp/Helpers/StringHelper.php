@@ -25,4 +25,23 @@ class StringHelper
         }
         return $all_pos;
     }
+
+    /**
+     * @param        $path
+     * @param string $suffix
+     *
+     * @return string
+     */
+    public static function basename($path, $suffix = ''): string
+    {
+        if (($len = mb_strlen($suffix)) > 0 && mb_substr($path, -$len) === $suffix) {
+            $path = mb_substr($path, 0, -$len);
+        }
+        $path = rtrim(str_replace('\\', '/', $path), '/\\');
+        if (($pos = mb_strrpos($path, '/')) !== false) {
+            return mb_substr($path, $pos + 1);
+        }
+
+        return $path;
+    }
 }
