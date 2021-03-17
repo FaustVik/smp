@@ -30,7 +30,7 @@ class Request
      */
     public function isPost(): bool
     {
-        return isset($_POST);
+        return !empty($_POST);
     }
 
     /**

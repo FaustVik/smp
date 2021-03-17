@@ -105,9 +105,10 @@ class Url
                 if ($first_parameter) {
                     $url             .= '?' . $key . '=' . $value;
                     $first_parameter = false;
-                } else {
-                    $url .= '&' . $key . '=' . $value;
+                    continue;
                 }
+
+                $url .= '&' . $key . '=' . $value;
             }
         }
 
