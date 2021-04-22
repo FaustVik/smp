@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use Smp\Helpers\Url;
 use Smp\Web\Controller;
 
 /**
@@ -12,7 +13,7 @@ class SiteController extends Controller
 {
     public function actionIndex()
     {
-        var_dump(123);
+        var_dump(Url::getQuery(Url::getUri()));
         exit;
     }
 }

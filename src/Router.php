@@ -2,6 +2,8 @@
 
 namespace Smp;
 
+use Smp\Helpers\Url;
+
 /**
  * Class Router
  * @author  Victor
@@ -74,35 +76,12 @@ class Router
      */
     protected function checkParams(): void
     {
-        if (strpos($this->uri, '-')) {
+        $params = Url::getQuery($this->uri);
+
+        if ($params) {
             $explode = explode('?', $this->uri);
-            $this->setParams($explode[1]);
+            $this->params = Url::getParamsToArray($explode[1]);
             $this->uri = $explode[0];
-        }
-    }
-
-    /**
-     * Set params
-     *
-     * @param string $params_string
-     */
-    protected function setParams(string $params_string): void
-    {
-        $params_arr = explode('&', $params_string);
-
-        if (!is_array($params_arr)) {
-            return;
-        }
-
-        foreach ($params_arr as $data) {
-            $ex = explode('=', $data);
-
-            if (isset($ex[1])) {
-                $key   = $ex[0];
-                $value = $ex[1];
-
-                $this->params[$key] = $value;
-            }
         }
     }
 
