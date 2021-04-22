@@ -1,39 +1,45 @@
 <?php
 
-namespace Smp;
+namespace Smp\Storage;
 
 use PDO;
+use Smp\Smp;
 
 /**
- * Class DataBase
- * @package Smp
+ * Class Database
+ * @package Smp\Storage
  */
-class DataBase
+class Database
 {
     protected const FETCH_ONE = 1;
     protected const FETCH_ALL = 2;
 
-    /**
-     * @return PDO
-     * @throws \Exception
-     */
-    protected function getDb(): ?PDO
+    /**@var \PDO $pdo */
+    private $pdo;
+
+    public function __construct()
     {
-        $db_config = Application::$app->db;
+        $db_config = Smp::$app->db;
 
         try {
-            $pdo = new PDO('mysql:host=' . $db_config['host'] . ';dbname=' . $db_config['dbname'], $db_config['user'], $db_config['password']);
-            $pdo->exec("SET NAMES utf8");
-            return $pdo;
+            $this->pdo = new PDO('mysql:host=' . $db_config['host'] . ';dbname=' . $db_config['dbname'], $db_config['user'], $db_config['password']);
+            $this->pdo->exec("SET NAMES utf8");
         } catch (\PDOException $exception) {
-            throw new \RuntimeException('error connected Db ' . $exception);
+            throw new \RuntimeException('Error connected Db: ' . $exception);
         }
     }
 
     /**
-     * @param string $sql
-     * @param int    $style
-     * @param array  $prepare_data
+     * @return PDO
+     */
+    public function getPdo(): PDO
+    {
+        return $this->pdo;
+    }
+
+    /* @param string $sql
+     * @param int   $style
+     * @param array $prepare_data
      *
      * @return array|mixed
      * @throws \Exception
@@ -65,8 +71,7 @@ class DataBase
      */
     public function fetchObj(string $sql, $prepare_data = [])
     {
-        $db   = $this->getDb();
-        $stmt = $db->prepare($sql);
+        $stmt = $this->getPdo()->prepare($sql);
         if ($prepare_data) {
             $stmt->execute($prepare_data);
         } else {
@@ -85,8 +90,7 @@ class DataBase
      */
     public function execute(string $sql, $prepare_data = [])
     {
-        $pdo  = $this->getDb();
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->getPdo()->prepare($sql);
 
         return $stmt->execute($prepare_data);
     }
@@ -102,8 +106,7 @@ class DataBase
      */
     protected function fetch(string $sql, $style, $type, $prepare_data = [])
     {
-        $pdo  = $this->getDb();
-        $stmt = $pdo->prepare($sql);
+        $stmt = $this->getPdo()->prepare($sql);
 
         if (empty($prepare_data)) {
             $stmt->execute();
@@ -116,5 +119,13 @@ class DataBase
         }
 
         return $stmt->fetchAll($style);
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastInsertId(): int
+    {
+        return (int)$this->getPdo()->lastInsertId();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Smp\Helpers;
 
-use Smp\Application;
+use Smp\Smp;
 
 /**
  * Class Url
@@ -10,9 +10,6 @@ use Smp\Application;
  */
 class Url
 {
-    public const SCHEME_HTTP  = 'http://';
-    public const SCHEME_HTTPS = 'https://';
-
     /**
      * @param $data
      *
@@ -84,7 +81,7 @@ class Url
      */
     public static function toRoute(string $route, array $params = [])
     {
-        $rules = Application::$app->url_manager;
+        $rules = Smp::$app->url_manager;
 
         $url = '';
 

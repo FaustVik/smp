@@ -2,13 +2,14 @@
 
 namespace Smp\Web;
 
-use Smp\Application;
+use Smp\base\Controller as baseController;
+use Smp\Smp;
 
 /**
  * Class Controller
  * @package Smp\Web
  */
-class Controller extends \Smp\base\Controller
+class Controller extends baseController
 {
     /**@var string $title */
     public $title;
@@ -24,7 +25,7 @@ class Controller extends \Smp\base\Controller
 
     public function __construct()
     {
-        $this->layout_path = Application::$app->layout_path;
+        $this->layout_path = Smp::$app->layout_path;
     }
 
     /**
@@ -44,7 +45,7 @@ class Controller extends \Smp\base\Controller
 
         ob_start();
 
-        $path_to_content     = Application::$app->view_path . '/' . $this->getClassName() . '/' . $filename . '.php';
+        $path_to_content     = Smp::$app->view_path . '/' . $this->getClassName() . '/' . $filename . '.php';
         $path_to_head_file   = $this->getPathToLayoutsFile('head');
         $path_to_footer_file = $this->getPathToLayoutsFile('footer');
 

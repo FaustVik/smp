@@ -3,10 +3,10 @@
 namespace Smp\base;
 
 /**
- * Class Application
+ * Class AppException
  * @package Smp\base
  */
-class Application
+class AppException extends \Exception
 {
 
 }
