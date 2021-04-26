@@ -7,6 +7,8 @@ use Smp\Storage\Database;
 
 /**
  * Class Application
+ * @property array  $db
+ * @property string $namespace
  * @package Smp\base
  */
 abstract class Application
