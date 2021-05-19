@@ -13,7 +13,7 @@ class Cookie implements StorageInterface
      */
     public function get($key)
     {
-        return $_COOKIE[$key];
+       return $_COOKIE[$key];
     }
 
     /**

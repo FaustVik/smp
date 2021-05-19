@@ -19,6 +19,9 @@
   "require": {
     "php": ">=7.3",
     "ext-mbstring": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "vimeo/psalm": "^4.7"
+  },
+  "require-dev": {
   }
 }

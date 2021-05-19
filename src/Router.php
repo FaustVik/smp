@@ -86,11 +86,11 @@ class Router
     }
 
     /**
-     * @param $controller_name
+     * @param string $controller_name
      *
      * @return string
      */
-    protected function setController($controller_name): string
+    protected function setController(string $controller_name): string
     {
         $controller_name = $this->replacingTheHyphenWithUppercase($controller_name);
 
