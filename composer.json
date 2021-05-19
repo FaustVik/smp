@@ -9,7 +9,7 @@
       "name": "RosbergVik"
     }
   ],
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "autoload": {
     "psr-4": {
       "Smp\\": "src/",
