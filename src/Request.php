@@ -16,7 +16,7 @@ class Request
     /**
      * @return Request
      */
-    public static function i()
+    public static function i(): Request
     {
         if (self::$instance === null) {
             self::$instance = new self();
@@ -30,7 +30,7 @@ class Request
      */
     public function isPost(): bool
     {
-        return isset($_POST);
+        return !empty($_POST);
     }
 
     /**

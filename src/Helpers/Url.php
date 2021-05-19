@@ -2,7 +2,7 @@
 
 namespace Smp\Helpers;
 
-use Smp\Application;
+use Smp\Smp;
 
 /**
  * Class Url
@@ -10,9 +10,6 @@ use Smp\Application;
  */
 class Url
 {
-    public const SCHEME_HTTP  = 'http://';
-    public const SCHEME_HTTPS = 'https://';
-
     /**
      * @param $data
      *
@@ -69,22 +66,18 @@ class Url
      */
     public static function buildSchemeWithHost(): string
     {
-        if (SMP_DEBUG){
-            return  self::SCHEME_HTTP . $_SERVER['SERVER_NAME'] . '/';
-        }
-
-        return self::SCHEME_HTTPS . $_SERVER['SERVER_NAME'] . '/';
+        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . '/';
     }
 
     /**
-     * @param       $route
-     * @param array $params
+     * @param string $route
+     * @param array  $params
      *
      * @return int|string
      */
-    public static function toRoute($route, array $params = [])
+    public static function toRoute(string $route, array $params = [])
     {
-        $rules = Application::$app->url_manager;
+        $rules = Smp::$app->url_manager;
 
         $url = '';
 
@@ -103,14 +96,47 @@ class Url
         if (!empty($params)) {
             foreach ($params as $key => $value) {
                 if ($first_parameter) {
-                    $url .= '?' . $key . '=' . $value;
+                    $url             .= '?' . $key . '=' . $value;
                     $first_parameter = false;
-                } else {
-                    $url .= '&' . $key . '=' . $value;
+                    continue;
                 }
+
+                $url .= '&' . $key . '=' . $value;
             }
         }
 
-        return $url;
+        return self::buildSchemeWithHost() . $url;
+    }
+
+    /**
+     * @param string $query
+     *
+     * @return array
+     */
+    public static function getParamsToArray(string $query): array
+    {
+        $params_arr = explode('&', $query);
+
+        if (!is_array($params_arr)) {
+            return [];
+        }
+
+        $params = [];
+
+        foreach ($params_arr as $data) {
+            $ex = explode('=', $data);
+
+            $params[$ex[0]] = $ex[1] ?? null;
+        }
+
+        return $params;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getUri()
+    {
+        return $_SERVER["REQUEST_URI"];
     }
 }
