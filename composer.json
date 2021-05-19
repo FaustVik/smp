@@ -12,11 +12,16 @@
   "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
-      "Smp\\": "smp/"
+      "Smp\\": "src/",
+      "App\\": "test/"
     }
   },
   "require": {
     "php": ">=7.3",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "ext-pdo": "*",
+    "vimeo/psalm": "^4.7"
+  },
+  "require-dev": {
   }
 }

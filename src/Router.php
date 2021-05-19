@@ -2,10 +2,12 @@
 
 namespace Smp;
 
+use Smp\Helpers\Url;
+
 /**
  * Class Router
  * @author  Victor
- * @version 3.1
+ * @version 3.2
  * @since   10.09.2019
  * @package Smp
  */
@@ -74,47 +76,25 @@ class Router
      */
     protected function checkParams(): void
     {
-        $explode = explode('?', $this->uri);
+        $params = Url::getQuery($this->uri);
 
-        if (isset($explode[1])) {
-            $this->setParams($explode[1]);
+        if ($params) {
+            $explode = explode('?', $this->uri);
+            $this->params = Url::getParamsToArray($explode[1]);
             $this->uri = $explode[0];
         }
     }
 
     /**
-     * Set params
-     *
-     * @param string $params_string
-     */
-    protected function setParams(string $params_string): void
-    {
-        $params_arr = explode('&', $params_string);
-
-        if (!is_array($params_arr)) {
-            return;
-        }
-
-        foreach ($params_arr as $data) {
-            $ex = explode('=', $data);
-
-            if (isset($ex[1])) {
-                $key   = $ex[0];
-                $value = $ex[1];
-
-                $this->params[$key] = $value;
-            }
-        }
-    }
-
-    /**
-     * @param $controller_name
+     * @param string $controller_name
      *
      * @return string
      */
-    protected function setController($controller_name): string
+    protected function setController(string $controller_name): string
     {
-        return $this->namespace . '\\' . ucfirst($controller_name) . 'Controller';
+        $controller_name = $this->replacingTheHyphenWithUppercase($controller_name);
+
+        return $this->namespace . '\\' . $controller_name . 'Controller';
     }
 
     /**
@@ -124,19 +104,7 @@ class Router
      */
     protected function setAction(string $action_name): string
     {
-        $ex = explode('-', $action_name);
-
-        if (count($ex) > 1) {
-            $action = 'action';
-
-            foreach ($ex as $item) {
-                $action .= ucfirst($item);
-            }
-
-            return $action;
-        }
-
-        return 'action' . ucfirst($action_name);
+        return 'action' . $this->replacingTheHyphenWithUppercase($action_name);
     }
 
     protected function runAction(): void
@@ -162,7 +130,7 @@ class Router
         }
 
         if (!method_exists($this->controller, $action)) {
-            Application::$app->getResponse()->set404();
+            Smp::$app->getResponse()->set404();
         }
 
         /** call method afterAction */
@@ -187,7 +155,7 @@ class Router
     {
         $pattern = substr($pattern, 1);
 
-        $rules = Application::$app->url_manager;
+        $rules = Smp::$app->url_manager;
 
         if (!$rules) {
             return false;
@@ -211,10 +179,33 @@ class Router
      */
     protected function setNamespaces(): void
     {
-        $this->namespace = Application::$app->namespace;
+        $this->namespace = Smp::$app->namespace;
 
         if (!$this->namespace) {
             throw new \ErrorException('Not found Namespace');
         }
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    protected function replacingTheHyphenWithUppercase(string $name): string
+    {
+        if (strpos($name, '-')) {
+
+            $arr = explode('-', $name);
+
+            $replace_name = '';
+
+            foreach ($arr as $item) {
+                $replace_name .= ucfirst($item);
+            }
+
+            return ucfirst($replace_name);
+        }
+
+        return ucfirst($name);
     }
 }

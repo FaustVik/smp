@@ -2,3 +2,7 @@
 vendor
 composer.lock
 app
+
+lsp
+psalm.sh
+psalm.xml
