@@ -8,17 +8,17 @@ namespace Smp\Console;
  */
 class Controller extends \Smp\base\Controller
 {
-    /**@var \DateTime $start */
+    /**@var float $start */
     protected $start;
 
     public function afterAction()
     {
-        $this->start = new \DateTime();
-        echo 'Start: ' . PHP_EOL;
+        echo 'End. Time taken: ' . round((microtime(true) - $this->start), 4) . PHP_EOL;
     }
 
     public function beforeAction()
     {
-        echo 'End. Time taken: ' . (microtime() - $this->start->getTimestamp()) . PHP_EOL;
+        $this->start = microtime(true);
+        echo 'Start: ' . PHP_EOL;
     }
 }

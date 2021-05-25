@@ -16,10 +16,11 @@ class Application extends \Smp\base\Application
 
     public function run(): void
     {
-        $this->init();
+        $router = new Router();
+        $router->run();
     }
 
-    private function init():void
+    private function init(): void
     {
         $this->getRequest()->getParams();
     }
@@ -30,5 +31,10 @@ class Application extends \Smp\base\Application
     public function getRequest(): Request
     {
         return Request::i();
+    }
+
+    public function close(): void
+    {
+        exit(0);
     }
 }
