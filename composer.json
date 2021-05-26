@@ -1,12 +1,12 @@
 {
   "name": "rosbergvik/smp",
   "description": "simple mvc project",
-  "version":"0.1",
+  "version": "0.2",
   "license": "BSD-3-Clause",
   "type": "library",
   "authors": [
     {
-      "name": "RosbergVik"
+      "name": "Victor"
     }
   ],
   "minimum-stability": "dev",

@@ -3,9 +3,6 @@
 namespace Smp\Web;
 
 use Smp\base\Application as baseApplication;
-use Smp\Request;
-use Smp\Response;
-use Smp\Router;
 use Smp\Storage\Session;
 
 /**

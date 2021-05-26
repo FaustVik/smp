@@ -1,8 +1,10 @@
 <?php
 
-namespace Smp;
+namespace Smp\Web;
 
+use Smp\base\RouterFactory;
 use Smp\Helpers\Url;
+use Smp\Smp;
 
 /**
  * Class Router
@@ -11,28 +13,10 @@ use Smp\Helpers\Url;
  * @since   10.09.2019
  * @package Smp
  */
-class Router
+class Router extends RouterFactory
 {
-    protected const DEFAULT_CONTROLLER = 'site';
-    protected const DEFAULT_ACTION     = 'index';
-
-    protected const BEFORE_ACTION = 'beforeAction';
-    protected const AFTER_ACTION  = 'afterAction';
-
     /**@var string $uri */
     protected $uri;
-
-    /**@var string $controller */
-    protected $controller;
-
-    /**@var string $action */
-    protected $action;
-
-    /**@var array $params */
-    protected $params = [];
-
-    /**@var string $namespace */
-    protected $namespace;
 
     /**
      * @throws \ErrorException
@@ -42,6 +26,7 @@ class Router
         $this->getUri();
         $this->setNamespaces();
         $this->parse();
+        $this->runAction();
     }
 
     protected function getUri(): void
@@ -67,8 +52,6 @@ class Router
                 $this->action     = $this->setAction($explode[2]);
             }
         }
-
-        $this->runAction();
     }
 
     /**
@@ -79,32 +62,10 @@ class Router
         $params = Url::getQuery($this->uri);
 
         if ($params) {
-            $explode = explode('?', $this->uri);
+            $explode      = explode('?', $this->uri);
             $this->params = Url::getParamsToArray($explode[1]);
-            $this->uri = $explode[0];
+            $this->uri    = $explode[0];
         }
-    }
-
-    /**
-     * @param string $controller_name
-     *
-     * @return string
-     */
-    protected function setController(string $controller_name): string
-    {
-        $controller_name = $this->replacingTheHyphenWithUppercase($controller_name);
-
-        return $this->namespace . '\\' . $controller_name . 'Controller';
-    }
-
-    /**
-     * @param string $action_name
-     *
-     * @return string
-     */
-    protected function setAction(string $action_name): string
-    {
-        return 'action' . $this->replacingTheHyphenWithUppercase($action_name);
     }
 
     protected function runAction(): void
@@ -172,40 +133,5 @@ class Router
             }
         }
         return false;
-    }
-
-    /**
-     * @throws \ErrorException
-     */
-    protected function setNamespaces(): void
-    {
-        $this->namespace = Smp::$app->namespace;
-
-        if (!$this->namespace) {
-            throw new \ErrorException('Not found Namespace');
-        }
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return string
-     */
-    protected function replacingTheHyphenWithUppercase(string $name): string
-    {
-        if (strpos($name, '-')) {
-
-            $arr = explode('-', $name);
-
-            $replace_name = '';
-
-            foreach ($arr as $item) {
-                $replace_name .= ucfirst($item);
-            }
-
-            return ucfirst($replace_name);
-        }
-
-        return ucfirst($name);
     }
 }

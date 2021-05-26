@@ -41,6 +41,9 @@ abstract class Application
         }
     }
 
+    /**
+     * @return Database
+     */
     public function getDb(): DataBase
     {
         return new DataBase();

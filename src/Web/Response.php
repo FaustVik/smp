@@ -1,6 +1,8 @@
 <?php
 
-namespace Smp;
+namespace Smp\Web;
+
+use Smp\Smp;
 
 /**
  * Class Response

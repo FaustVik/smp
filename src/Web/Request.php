@@ -1,6 +1,6 @@
 <?php
 
-namespace Smp;
+namespace Smp\Web;
 
 /**
  * Class Request
