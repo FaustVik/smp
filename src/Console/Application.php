@@ -20,9 +20,9 @@ class Application extends \Smp\base\Application
         $router->run();
     }
 
-    private function init(): void
+    protected function init(): void
     {
-        $this->getRequest()->getParams();
+        Request::i()->getParams();
     }
 
     /**
