@@ -31,4 +31,23 @@ class Directory
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $path));
         }
     }
+
+    /**
+     * @param string $path
+     */
+    public static function deleteDir(string $path): void
+    {
+        $dir = opendir($path);
+        while (false !== ($file = readdir($dir))) {
+            if (($file !== '.') && ($file !== '..')) {
+                if (is_dir($path . '/' . $file)) {
+                    self::deleteDir($path . '/' . $file);
+                } else {
+                    unlink($path . '/' . $file);
+                }
+            }
+        }
+        closedir($dir);
+        rmdir($path);
+    }
 }
