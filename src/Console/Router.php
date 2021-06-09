@@ -23,27 +23,26 @@ class Router extends RouterFactory
 
     protected function parse(): void
     {
-        $params = Smp::$app->getRequest()->getParams();
+        $this->params = Smp::$app->getRequest()->getParams();
 
-        $explode = explode('/', $params[0]);
-        unset($params[0]);
+        [$controller, $action] = explode('/', $this->params[0]);
 
-        $this->params = $params;
-
-        if (count($explode) === 2) {
-            /** without action */
-            $this->controller = $this->setController($explode[1]);
+        if ($controller && $action) {
+            $this->controller = $this->setController($controller);
+            $this->action     = $this->setAction($action);
+        } elseif ($controller) {
+            $this->controller = $this->setController($controller);
             $this->action     = $this->setAction(self::DEFAULT_ACTION);
         } else {
-            $this->controller = $this->setController($explode[1]);
-            $this->action     = $this->setAction($explode[2]);
+            echo "Not found class";
+            Smp::$app->close();
         }
     }
 
     protected function runAction(): void
     {
         if (!class_exists($this->controller)) {
-            echo "Not found";
+            echo "Not found class";
             Smp::$app->close();
         }
 

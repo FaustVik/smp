@@ -3,7 +3,6 @@
 namespace Smp\base;
 
 use Smp\Smp;
-use Smp\Storage\Database;
 
 /**
  * Class Application
