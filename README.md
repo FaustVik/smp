@@ -1,105 +1,68 @@
-Simple mvc template
+Simple mvc (SMP)
 ============================
 
-Установка
----------
-### Ставим через composer
+A simple library for deploying a simple site. Web and console applications are available out of the box.
 
-используем команду в корне проекта:
+### Installation
 
-~~~
-composer dump-autoload
-~~~
-
-
-Конфиг nginx c php7
--------------------
-```nginx
-server {
-    charset utf-8;
-    client_max_body_size 128M;
-
-    listen 80;
-
-    server_name mvc.api;
-    root        /home/viktor/projects/smp/web;
-    index       index.php;
-
-    access_log  /var/log/nginx/access.log;
-    error_log   /var/log/nginx/error.log;
-
-    location / {
-        # Redirect everything that isn't a real file to index.php
-        try_files $uri $uri/ /index.php$is_args$args;
-    }
-    location ~* ^.+\.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|rss|atom|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$ {
-                access_log off;
-                log_not_found off;
-                expires max; # кеширование статики
-        }
-
-    # uncomment to avoid processing of calls to non-existing static files by Yii
-    #location ~ \.(js|css|png|jpg|gif|swf|ico|pdf|mov|fla|zip|rar)$ {
-    #    try_files $uri =404;
-    #}
-    #error_page 404 /404.html;
-
-    # deny accessing php files for the /assets directory
-    location ~ \.php$ {
-            include fastcgi_params;
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-            fastcgi_pass unix:/run/php/php7.3-fpm.sock;
-
-            try_files $uri =404;
-        }
-
-
-    location ~* /\. {
-        deny all;
-    }
-}
+```sh
+composer require rosbergvik/smp:dev-master
 ```
 
-Роутер
--------------------
+### Example
 
-считываем uri из переменной $_SERVER
-далее свою работу начинает парсинг, считанного uri
+[Example](https://github.com/FaustVik/smp/tree/master/test) of creating a simple mvc application using SMP.
+
+P.S.
+Run console controller php your_console_endpoint.php  controller/action [params] (php console.php test/action 'fist_params') 
+### Configs
+
+For a web application, the required parameters are:
+
 ```php
- public function run()
-    {
-        $this->uri = $_SERVER['REQUEST_URI'];
-
-        $this->parse();
-    }
+return [
+    'namespace'   => 'your_namespace',
+    'view_path'   => 'path_to_views',
+    'layout_path'   => 'path_to_layouts',
+    'url_manager' => [
+        'alias' => 'controller/action'
+    ],
+];
 ```
 
-Сначала проверяем является ли uri корнем сайта.
-Если да, то выбирается дефолтный контроллер и экшен (Site/index)б прописываем namespace и с экшену дописываем слово action (actionIndex)
-Иначе:
-проверяем есть ли параметры
+For the console application, the required parameters are:
+
 ```php
-protected function parse()
-    {
-        if ($this->uri === '/') {
-            $this->controller = $this->setNamespaces($this->defaultController);
-            $this->action     = $this->setAction($this->defaultAction);
-        } else {
-            $this->WorkWithParams();
+return [
+     'namespace'   => 'your_namespace',
+];
+```
 
-            if (!$this->routes($this->uri)) {
-                $explode = explode('/', $this->uri);
+### Endpoints
 
-                if (count($explode) == 2){
-                    $this->controller = $this->setNamespaces($explode[1]);
-                    $this->action     = $this->setAction($this->defaultAction);
-                }else{
-                    $this->controller = $this->setNamespaces($explode[1]);
-                    $this->action     = $this->setAction($explode[2]);
-                }
-            }
-        }
+Web:
+```php 
+$vendor_path = dirname(__DIR__, 2);
 
-        $this->runAction();
-    }
+$basePath = dirname(__DIR__);
+
+require $vendor_path . '/vendor/autoload.php';
+
+$config = require $basePath . '/config/main.php';
+
+(new Smp\Web\Application($config))->run();
+```
+
+Console:
+
+```php 
+$vendor_path = dirname(__DIR__);
+
+$basePath = __DIR__;
+
+require $vendor_path . '/vendor/autoload.php';
+
+$config = require $basePath . '/config/console.php';
+
+(new \Smp\Console\Application($config))->run();
 ```
