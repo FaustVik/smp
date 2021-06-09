@@ -14,7 +14,10 @@ composer require rosbergvik/smp:dev-master
 [Example](https://github.com/FaustVik/smp/tree/master/test) of creating a simple mvc application using SMP.
 
 P.S.
-Run console controller php your_console_endpoint.php  controller/action [params] (php console.php test/action 'fist_params') 
+Run console controller
+```shell
+php your_console_endpoint.php  controller/action [params] (php console.php test/action 'fist_params')
+``` 
 ### Configs
 
 For a web application, the required parameters are:
