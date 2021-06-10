@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use Smp\Helpers\Url;
 use Smp\Web\Controller;
 
 /**
@@ -11,9 +10,36 @@ use Smp\Web\Controller;
  */
 class SiteController extends Controller
 {
-    public function actionIndex()
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    public function actionIndex(): string
     {
-        var_dump(Url::getQuery(Url::getUri()));
-        exit;
+        $this->title = 'Index Page';
+
+        $name = 'Your name';
+
+        return $this->render('index', [
+            'name' => $name,
+        ]);
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    public function actionTest(): string
+    {
+        $this->title = '';
+
+        $params = [
+            'Line',
+            'Two line',
+        ];
+
+        return $this->render('test', [
+            'params' => $params,
+        ]);
     }
 }
