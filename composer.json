@@ -13,15 +13,15 @@
   "autoload": {
     "psr-4": {
       "Smp\\": "src/",
-      "App\\": "test/"
+      "SmpTest\\": "test/"
     }
   },
   "require": {
     "php": ">=7.3",
     "ext-mbstring": "*",
-    "ext-pdo": "*",
-    "vimeo/psalm": "^4.7"
+    "ext-pdo": "*"
   },
   "require-dev": {
+    "vimeo/psalm": "^4.7"
   }
 }

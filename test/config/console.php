@@ -7,5 +7,5 @@ return [
         'host'     => 'localhost',
         'db_name'  => 'test',
     ],
-    'namespace'   => 'App\Console',
+    'namespace'   => 'SmpTest\Console',
 ];

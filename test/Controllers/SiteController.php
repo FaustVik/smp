@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace SmpTest\Controllers;
 
 use Smp\Web\Controller;
 
