@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console;
+namespace SmpTest\Console;
 
 use Smp\Console\Controller;
 
