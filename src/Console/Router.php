@@ -64,7 +64,7 @@ class Router extends RouterFactory
 
             $controller->$after();
         } else {
-            echo('Method not found');
+            echo'Method not found';
             Smp::$app->close();
         }
     }
