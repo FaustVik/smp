@@ -70,9 +70,8 @@ class Router extends RouterFactory
 
     protected function runAction(): void
     {
-        /** set default Controller if not found necessary Controller */
         if (!class_exists($this->controller)) {
-            $this->controller = $this->setController(self::DEFAULT_CONTROLLER);
+            Smp::$app->getResponse()->set404();
         }
 
         $this->controller = new $this->controller;

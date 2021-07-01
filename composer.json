@@ -1,6 +1,11 @@
 {
   "name": "rosbergvik/smp",
   "description": "simple mvc project",
+  "keywords": [
+    "php",
+    "mvc",
+    "smp"
+  ],
   "version": "0.2",
   "license": "BSD-3-Clause",
   "type": "library",
@@ -10,10 +15,10 @@
     }
   ],
   "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
-      "Smp\\": "src/",
-      "SmpTest\\": "test/"
+      "Smp\\": "src/"
     }
   },
   "require": {
@@ -23,5 +28,10 @@
   },
   "require-dev": {
     "vimeo/psalm": "^4.7"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "SmpTest\\": "test/"
+    }
   }
 }
