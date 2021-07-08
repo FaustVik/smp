@@ -2,8 +2,6 @@
 
 namespace Smp\Web;
 
-use Smp\Smp;
-
 /**
  * Class Response
  * @package Smp
@@ -28,37 +26,17 @@ class Response
      * @param string $message
      *
      */
-    public function set404($message = '')
+    public function set404(string $message = '')
     {
         header('HTTP/1.0 404 Not Found', true, 404);
-
-        $path = Smp::$app->layout_path . '/error/404.html';
-
-        if (!is_file($path)) {
-            $path = Smp::$app->getPathToSrc() . 'layout/error/404.html';
-        }
-
-        $contents = file_get_contents($path, TRUE);
-
-        exit($contents);
     }
 
     /**
      * @param string $message
      *
      */
-    public function set403($message = '')
+    public function set403(string $message = '')
     {
         header('HTTP/1.0 403 Forbidden', true, 403);
-
-        $path = Smp::$app->layout_path . '/error/403.html';
-
-        if (!is_file($path)) {
-            $path = Smp::$app->getPathToSrc() . 'layout/error/404.html';
-        }
-
-        $contents = file_get_contents($path, TRUE);
-
-        exit($contents);
     }
 }
